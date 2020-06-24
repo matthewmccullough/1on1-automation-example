@@ -6,7 +6,8 @@ labels: '1-on-1'
 assignees: mydirectreport, matthewmccullough
 
 ---
-
+Will follow the format of:
+```
 ### Lightning round ⚡️
 
 1. LIGHTNINGITEMSHERE
@@ -22,3 +23,5 @@ assignees: mydirectreport, matthewmccullough
 ### Go-To-Market (GTM) 💵
 
 1. GTMITEMSHERE
+
+```
