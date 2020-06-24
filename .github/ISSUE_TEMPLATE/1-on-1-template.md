@@ -1,9 +1,9 @@
 ---
 name: 1 on 1 template
 about: A template for our 1:1s
-title: 1:1 for Erica + Matthew
+title: 1:1 for MYMANAGER + Matthew
 labels: '1-on-1'
-assignees: matthewmccullough, eanderson
+assignees: matthewmccullough, mymanager
 ---
 
 ## 1:1 for Erica + Matthew
