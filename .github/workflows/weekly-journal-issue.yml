@@ -1,0 +1,30 @@
+# Weekly Issue creation and closure for journaling weekly activities
+# Inspired by the work of Steve Winton (@swinton) and John Bohannon (@imjohnbo)
+# Source at:
+# https://github.com/imjohnbo/issue-bot/blob/master/index.js
+# Example at:
+# https://github.com/github/partner-engineering/blob/c6d8f85a76b2d8a7188833537726043cd3dbdd52/.github/workflows/monthly-radar.yml
+
+name: Scheduled Weekly Journal Issue
+on:
+  schedule:
+    # Run each Sunday at 1600 UTC
+    - cron: "0 16 * * 0"
+
+jobs:
+
+  weekly-journal:
+    name: Weekly Journal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set Date
+        run: echo "::set-env name=DATE::$(date -u '+%F')"
+      
+      - name: weekly-journal-issue-management
+        uses: imjohnbo/issue-bot@v2.2
+        with:
+          title: "Weekly journal notes for Erica + Matthew for week of ${{ env.DATE }}"
+          template: ".github/ISSUE_TEMPLATE/weekly_journal.md"
+          close-previous: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
