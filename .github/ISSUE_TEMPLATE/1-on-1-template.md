@@ -9,7 +9,7 @@ assignees: matthewmccullough, mymanager
 ## 1:1 for Erica + Matthew
 
 Will follow the format of:
-```
+```markdown
 ### Key Updates 🔑
 
 1. _Share any major updates to #s, deals, team or key projects/initiatives_
