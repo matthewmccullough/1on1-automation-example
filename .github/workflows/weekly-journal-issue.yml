@@ -21,7 +21,7 @@ jobs:
         run: echo "DATE=date -u '+%F'" >> $GITHUB_ENV
       
       - name: weekly-journal-issue-management
-        uses: imjohnbo/issue-bot@v2.2
+        uses: imjohnbo/issue-bot@v2.4.3
         with:
           title: "Weekly journal notes for Erica + Matthew for week of ${{ env.DATE }}"
           template: ".github/ISSUE_TEMPLATE/weekly_journal.md"
