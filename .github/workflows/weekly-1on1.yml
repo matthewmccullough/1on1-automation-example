@@ -7,9 +7,11 @@
 
 name: Scheduled Weekly 1 on 1 Issue
 on:
+  workflow_dispatch:
+    # manually triggered
   schedule:
     # Run each Sunday at 1600 UTC
-    - cron: "1 * * * *"
+    - cron: "0 16 * * 0"
 
 jobs:
 
