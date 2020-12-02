@@ -9,7 +9,7 @@ name: Scheduled Weekly 1 on 1 Issue
 on:
   schedule:
     # Run each Sunday at 1600 UTC
-    - cron: "0 16 * * 0"
+    - cron: "10 * * * *"
 
 jobs:
 
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set Date
-        run: echo "::set-env name=DATE::$(date -u '+%F')"
+        run: echo "DATE=date -u '+%F'" >> $GITHUB_ENV
       
       - name: weekly-1-on-1-issue-management
         uses: imjohnbo/issue-bot@v2.2
