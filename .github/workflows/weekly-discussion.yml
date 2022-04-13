@@ -4,63 +4,41 @@ on:
   schedule:
   - cron: 0 8 * * 2  # Every Tuesday at 08:00 UTC
 
+permissions:
+  discussions: write
+  contents: read
+
 jobs:
   weekly_discussion:    
     name: Create new discussion
     runs-on: ubuntu-latest
     steps:
   
-    - uses: actions/github-script@v3
+    - name: Set Date
+      # TODO: increment day of week
+      run: echo "DATE=$(date -u '+%F')" >> $GITHUB_ENV
+    - name: Get template
+      uses: imjohnbo/extract-issue-template-fields@v1.0.1
+      id: extract
       with:
-        # TODO Change this to a GITHUB TOKEN (not PAT) once the Discussions API is publicly available
-        # github-token: ${{ secrets.GITHUB_TOKEN }}
-        github-token: ${{secrets.PAT_FOR_DISCUSSIONS_API}}
+        path: .github/ISSUE_TEMPLATE/snippets.md # Core snippet details
+        result-encoding: string
+      env: 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish Discussion
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          // Get date for next weekday ordinal
-          // (0 = sunday, 1 = monday, 2 = tuesday, 3 = wednesday, 4 = thursday, 5 = friday, 6 = saturday)
-          function nextDay(targetdayofweek) {
-              var now = new Date();
-              var nextDate = new Date();
-              console.log("Now = " + now);
-              console.log("Now as ISO = " + now.toISOString());
-              var todaysday = now.getUTCDay();
-              console.log("Todays day = " + todaysday);
-              var delta = targetdayofweek + (7-todaysday) % 7;
-              console.log("Delta = " + delta);
-              nextDate.setUTCDate(now.getUTCDate() + delta);
-              console.log("New day = " + nextDate);
-              console.log("New day as ISO = " + nextDate.toISOString());
-              return nextDate;
-          }
-          // Add specified number of days to today's UTC day of the month
-          function addDays(daysToAdd) {
-              var now = new Date();
-              var nextDate = new Date();
-              console.log("Now = " + now);
-              console.log("Now as ISO = " + now.toISOString());
-              var todaysday = now.getUTCDay();
-              console.log("Todays day = " + todaysday);
-              nextDate.setUTCDate(now.getUTCDate() + daysToAdd);
-              console.log("New day = " + nextDate);
-              console.log("New day as ISO = " + nextDate.toISOString());
-              return nextDate;
-          }
-          //const title = `Weekly Snippets for ${nextDay(9).toISOString().split('T')[0]}`;
-          const title = `Weekly Snippets for ${addDays(7).toISOString().split('T')[0]}`;
-          console.log(title);
+          const title = `RLT Snippets for ${{ env.DATE }}`;
 
-          const body = `
-          1. Snippets from the team should following the format of [this template](https://github.com/matthewmccullough/human-interaction-templates/blob/master/weekly-snippets.md).
-          2. If you don't have a lot, that's fine. Even one bullet point is helpful.
-          3. Link out to resources and issues more than you write.
-          4. @matthewmccullough ships his snippets and excerpts of these to leadership each Tuesday evening around 19:00 Pacific Time.
-          `;
-          const repository_id = "MDEwOlJlcG9zaXRvcnkzNjY1NTk1NjE=";
-          const category_id = "MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMyOTIzMzcy"; // Snippets
+          # TODO: Add your own ids here
+          const repository_id = "";
+          const category_id = "";
 
           const query = `
             mutation {
-                createDiscussion(input:{repositoryId: "${repository_id}", categoryId: "${category_id}", title: "${title}", body: "${body}"}) {
+                createDiscussion(input:{repositoryId: "${repository_id}", categoryId: "${category_id}", title: "${title}", body: "${{ steps.extract.outputs.body }}"}) {
                   discussion { id, title }
                 }
             }`;
@@ -71,4 +49,4 @@ jobs:
                 "GraphQL-Features": "discussions_api",
               },
           });
-          console.log(`Created discussion with id ${discussion.id}`);
+          console.log(`Created discussion with id ${discussion.id}`); 
